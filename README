@@ -9,7 +9,7 @@
 # StellarisWare: http://focus.ti.com/docs/toolsw/folders/print/sw-lm3s.html
 # ARM Toolchain: http://www.codesourcery.com/sgpp/lite/arm/portal/release1592
 #
-# NOTE: Make sure to change on the PREFIX line in makedefs as follows:
+# NOTE: Make sure to edit the PREFIX line in makedefs as follows:
 # PREFIX=${shell type arm-none-eabi-gcc /dev/null echo arm-none-eabi || echo arm-none-eabi}
 #
 # Debugger: http://openocd.sourceforge.net/ 
