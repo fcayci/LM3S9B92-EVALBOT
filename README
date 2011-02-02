@@ -1,0 +1,28 @@
+#----------------------------------------------------
+# File:     README
+# Version:  0.1
+# Author:   Furkan 'ArchMage' Cayci
+#----------------------------------------------------
+#
+# Sample Codes / Libraries for TI's Evalbot LM3S9B92 based on StellarisWare
+#
+# Evalbot Schematics: http://focus.ti.com/lit/ml/spmr001a/spmr001a.pdf
+# StellarisWare: http://focus.ti.com/docs/toolsw/folders/print/sw-lm3s.html
+# ARM Toolchain: http://www.codesourcery.com/sgpp/lite/arm/portal/release1592
+#
+# NOTE: Make sure to change on the PREFIX line in makedefs as follows:
+# PREFIX=${shell type arm-none-eabi-gcc /dev/null echo arm-none-eabi || echo arm-none-eabi}
+#
+# Debugger: http://openocd.sourceforge.net/ 
+#
+#
+# Run:
+#    sudo openocd -f openocd/tcl/interface/luminary.cfg -f openocd/tcl/target/stellaris.cfg 
+#
+# Run from another terminal:
+#    telnet localhost 4444
+#
+# To program: 
+#    halt
+#    flash write_image erase /tmp/program.bin 0
+#    reset
