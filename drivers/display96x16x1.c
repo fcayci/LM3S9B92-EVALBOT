@@ -59,7 +59,7 @@
 // The I2C slave address of the SSD controllers on the OLED displays.
 //
 //*****************************************************************************
-#define SSD_ADDR            0x3d
+#define SSD_ADDR            0x3c
 
 //*****************************************************************************
 //
@@ -927,11 +927,6 @@ Display96x16x1Init(tBoolean bFast)
 {
     unsigned long ulIdx;
 
-    // Enable +12V
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
-    GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_5);
-    GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_5, GPIO_PIN_5);
-
     //
     // Enable the I2C and GPIO port G blocks as they are needed by this driver.
     //
@@ -964,6 +959,7 @@ Display96x16x1Init(tBoolean bFast)
         SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
         GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0);
         GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
+
 #ifndef RIT_ONLY
     }
 #endif
@@ -972,10 +968,7 @@ Display96x16x1Init(tBoolean bFast)
     //
     // Configure the I2C SCL and SDA pins for I2C operation.
     //
-    GPIOPinConfigure(GPIO_PG0_I2C1SCL);
-    GPIOPinConfigure(GPIO_PG1_I2C1SDA);
-    //GPIOPinTypeI2C(GPIO_PORTG_BASE, GPIO_PIN_0 | GPIO_PIN_1);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C1);
+    GPIOPinTypeI2C(GPIO_PORTG_BASE, GPIO_PIN_0 | GPIO_PIN_1);
 
     //
     // Initialize the I2C master.

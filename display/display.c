@@ -63,11 +63,12 @@ int main(void)
     GPIO_PORTF_DIR_R |= 0x10;
     GPIO_PORTF_DEN_R |= 0x10;
 
+    Display96x16x1Init(true);
+    Display96x16x1StringDraw("#Display Demo#", 5, 0);
+    Display96x16x1StringDraw("by ArchMage!", 10, 1);
     //
     // Loop forever.
     //
-    Display96x16x1Init(true);
-    Display96x16x1StringDraw("ArchMage!!...", 0, 0);
     while(1)
     {
         //
