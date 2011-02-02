@@ -26,3 +26,7 @@
 #    halt
 #    flash write_image erase /tmp/program.bin 0
 #    reset
+# 
+# A nice tutorial on setting up the toolchain in Linux:
+#    https://www.synthetos.com/blog/setup-arm-toolchain-in-ubuntu/
+#    https://www.synthetos.com/blog/setup-arm-an-toolchain-in-ubuntu-part-2/
