@@ -21,40 +21,49 @@
 # This is part of revision 6852 of the EK-LM3S9B92 Firmware Package.
 #
 #******************************************************************************
+
 #
 # Defines the part type that this project uses.
 #
 PART=LM3S9B92
+
 #
 # The base directory for StellarisWare.
 #
 ROOT=../../..
+
 #
 # Include the common make definitions.
 #
 include ${ROOT}/makedefs
 
 VPATH=../drivers
+
 #
 # Where to find header files that do not live in the source directory.
 #
 IPATH=..
 IPATH+=../../..
+
+
 #
 # The default rule, which causes the blinky example to be built.
 #
 all: ${COMPILER}
 all: ${COMPILER}/blinky.axf
+
 #
 # The rule to clean out all the build products.
 #
 clean:
 	@rm -rf ${COMPILER} ${wildcard *~}
+
 #
 # The rule to create the target directory.
 #
 ${COMPILER}:
 	@mkdir ${COMPILER}
+
 #
 # Rules for building the blinky example.
 #
@@ -65,6 +74,7 @@ ${COMPILER}/blinky.axf: ${ROOT}/driverlib/${COMPILER}/libdriver.a
 ${COMPILER}/blinky.axf: blinky.ld
 SCATTERgcc_blinky=blinky.ld
 ENTRY_blinky=ResetISR
+
 #
 # Include the automatically generated dependency files.
 #

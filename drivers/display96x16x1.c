@@ -483,17 +483,17 @@ Display96x16x1WriteFirst(unsigned char ucChar)
     //
     // Set the slave address.
     //
-    I2CMasterSlaveAddrSet(I2C0_MASTER_BASE, SSD_ADDR, false);
+    I2CMasterSlaveAddrSet(I2C1_MASTER_BASE, SSD_ADDR, false);
 
     //
     // Write the first byte to the controller.
     //
-    I2CMasterDataPut(I2C0_MASTER_BASE, ucChar);
+    I2CMasterDataPut(I2C1_MASTER_BASE, ucChar);
 
     //
     // Start the transfer.
     //
-    I2CMasterControl(I2C0_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_START);
+    I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_START);
 }
 
 //*****************************************************************************
@@ -520,7 +520,7 @@ Display96x16x1WriteByte(unsigned char ucChar)
     //
     // Wait until the current byte has been transferred.
     //
-    while(I2CMasterIntStatus(I2C0_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
     {
     }
 
@@ -532,12 +532,12 @@ Display96x16x1WriteByte(unsigned char ucChar)
     //
     // Write the next byte to the controller.
     //
-    I2CMasterDataPut(I2C0_MASTER_BASE, ucChar);
+    I2CMasterDataPut(I2C1_MASTER_BASE, ucChar);
 
     //
     // Continue the transfer.
     //
-    I2CMasterControl(I2C0_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
+    I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
 }
 
 //*****************************************************************************
@@ -567,7 +567,7 @@ Display96x16x1WriteArray(const unsigned char *pucBuffer, unsigned long ulCount)
         //
         // Wait until the current byte has been transferred.
         //
-        while(I2CMasterIntStatus(I2C0_MASTER_BASE, false) == 0)
+        while(I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
         {
         }
 
@@ -579,13 +579,13 @@ Display96x16x1WriteArray(const unsigned char *pucBuffer, unsigned long ulCount)
         //
         // Write the next byte to the controller.
         //
-        I2CMasterDataPut(I2C0_MASTER_BASE, *pucBuffer++);
+        I2CMasterDataPut(I2C1_MASTER_BASE, *pucBuffer++);
         ulCount--;
 
         //
         // Continue the transfer.
         //
-        I2CMasterControl(I2C0_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
+        I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_CONT);
     }
 }
 
@@ -612,7 +612,7 @@ Display96x16x1WriteFinal(unsigned char ucChar)
     //
     // Wait until the current byte has been transferred.
     //
-    while(I2CMasterIntStatus(I2C0_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
     {
     }
 
@@ -624,17 +624,17 @@ Display96x16x1WriteFinal(unsigned char ucChar)
     //
     // Write the final byte to the controller.
     //
-    I2CMasterDataPut(I2C0_MASTER_BASE, ucChar);
+    I2CMasterDataPut(I2C1_MASTER_BASE, ucChar);
 
     //
     // Finish the transfer.
     //
-    I2CMasterControl(I2C0_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
+    I2CMasterControl(I2C1_MASTER_BASE, I2C_MASTER_CMD_BURST_SEND_FINISH);
 
     //
     // Wait until the final byte has been transferred.
     //
-    while(I2CMasterIntStatus(I2C0_MASTER_BASE, false) == 0)
+    while(I2CMasterIntStatus(I2C1_MASTER_BASE, false) == 0)
     {
     }
 
@@ -927,11 +927,17 @@ Display96x16x1Init(tBoolean bFast)
 {
     unsigned long ulIdx;
 
+    // Enable +12V
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+    GPIOPinTypeGPIOOutput(GPIO_PORTD_BASE, GPIO_PIN_5);
+    GPIOPinWrite(GPIO_PORTD_BASE, GPIO_PIN_5, GPIO_PIN_5);
+
     //
-    // Enable the I2C and GPIO port B blocks as they are needed by this driver.
+    // Enable the I2C and GPIO port G blocks as they are needed by this driver.
     //
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C0);
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C1);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOG);
+
 
 #if (!(defined OSRAM_ONLY) && !(defined RIT_ONLY))
     //
@@ -955,7 +961,7 @@ Display96x16x1Init(tBoolean bFast)
     if(g_ucDisplayIsRIT)
     {
 #endif
-        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOD);
+        SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOF);
         GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_0);
         GPIOPinWrite(GPIO_PORTF_BASE, GPIO_PIN_0, GPIO_PIN_0);
 #ifndef RIT_ONLY
@@ -966,12 +972,15 @@ Display96x16x1Init(tBoolean bFast)
     //
     // Configure the I2C SCL and SDA pins for I2C operation.
     //
-    GPIOPinTypeI2C(GPIO_PORTG_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    GPIOPinConfigure(GPIO_PG0_I2C1SCL);
+    GPIOPinConfigure(GPIO_PG1_I2C1SDA);
+    //GPIOPinTypeI2C(GPIO_PORTG_BASE, GPIO_PIN_0 | GPIO_PIN_1);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_I2C1);
 
     //
     // Initialize the I2C master.
     //
-    I2CMasterInitExpClk(I2C0_MASTER_BASE, SysCtlClockGet(), bFast);
+    I2CMasterInitExpClk(I2C1_MASTER_BASE, SysCtlClockGet(), bFast);
 
     //
     // Compute the inter-byte delay for the display controller.  This delay is
@@ -1033,7 +1042,7 @@ Display96x16x1Init(tBoolean bFast)
     // Note that the constant C is actually a bit larger than it needs to be in
     // order to provide some safety margin.
     //
-    g_ulDelay = 68 * (HWREG(I2C0_MASTER_BASE + I2C_O_MTPR) + 1);
+    g_ulDelay = 68 * (HWREG(I2C1_MASTER_BASE + I2C_O_MTPR) + 1);
 
     //
     // Initialize the display controller.  Loop through the initialization

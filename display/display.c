@@ -66,8 +66,8 @@ int main(void)
     //
     // Loop forever.
     //
-    Display96x16x1Init(false);
-    Display96x16x1StringDraw("ArchMage!!...", 6, 0);
+    Display96x16x1Init(true);
+    Display96x16x1StringDraw("ArchMage!!...", 0, 0);
     while(1)
     {
         //
