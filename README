@@ -1,6 +1,5 @@
 #----------------------------------------------------
 # File:     README
-# Version:  0.1
 # Author:   Furkan 'ArchMage' Cayci
 #----------------------------------------------------
 #
@@ -15,6 +14,7 @@
 #
 # Debugger: http://openocd.sourceforge.net/ 
 #
+# After setting up everything
 #
 # Run:
 #    sudo openocd -f openocd/tcl/interface/luminary.cfg -f openocd/tcl/target/stellaris.cfg 
